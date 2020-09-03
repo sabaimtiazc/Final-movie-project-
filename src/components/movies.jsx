@@ -1,15 +1,23 @@
 import React, {Component} from 'react';
 import Like from './common/like';
+import ListGroup from './common/listGroup';
 import { getMovies}from '../services/fakeMovieService';
 import Pagination from './common/pagination';
+import {getGenres} from '../services/fakeGenreService';
+import {paginate} from '../utils/paginate';
 
 
 class Movies extends Component{
     state = {
         movies: getMovies(),
+        genres: [],
         currentPage:1,
         pageSize: 4 
     };
+
+    componentDidMount(){
+this.setState({movies: getMovies(), genres: getGenres()});
+    }
 
     handleDelete = (movie)=>{
 const movies = this.state.movies.filter(m =>m._id !== movie._id);
@@ -28,18 +36,31 @@ handlePageChange = page =>{
 		movies[index] = { ...movies[index] };
 		movies[index].liked = !movies[index].liked;
 		this.setState({ movies });
-	};
+    };
+    
+
+    handleGenreSelect = genre=>{
+        console.log(genre);
+
+    };
 
     
     render(){
         const {length:count}= this.state.movies
-const {pageSize,currentPage} = this.state;
+const {pageSize, currentPage, movies:allMovies} = this.state;
 
 if (count ===0) return <p>
     there are no movies in the database.</p>;
+
+const movies = paginate(allMovies, currentPage, pageSize);
+
         return (
-            <React.Fragment>
-                  <p>Showing{count}movies in the the database.</p>
+            <div className= 'row'>
+<div className="col-2">
+    <ListGroup items = {this.state.genres} onItemSelect={this.handleGenreSelect}/>
+</div>
+<div className="col">
+<p>Showing{count}movies in the the database.</p>
           <table className="table">
             <thead>
                 <tr>
@@ -53,7 +74,7 @@ if (count ===0) return <p>
                 </tr>
             </thead>
             <tbody>
-              {this.state.movies.map((movie) => (
+              {movies.map(movie => (
                 <tr key={movie._id}>
                   <td>{movie.title}</td>
                   <td>{movie.genre.name}</td>
@@ -78,7 +99,12 @@ if (count ===0) return <p>
             onPageChange={this.handlePageChange}
             />
         </table>
-            </React.Fragment>
+
+
+
+
+</div>       
+</div>
         ); 
     }
 }
