@@ -18,7 +18,7 @@ columns = [
   {key:'delete', content:movie=>  <button onClick = {()=> this.props.onDelete(movie)}className="btn  btn-danger btn-sm">Delete</button>}
 ];
   render() { 
-    const {movies, onDelete, onLike, onSort,sortColumn} = this.props;
+    const {movies, onSort,sortColumn} = this.props;
     return (   
     <table className="table">
     <TableHeader 
