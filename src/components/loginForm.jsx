@@ -1,64 +1,32 @@
-import React, { Component } from "react";
-import Input from "./common/input";
 
-class LoginForm extends Component {
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+
+class LoginForm extends Form {
   state = {
-    account: {
-      username: "",
-      password: "",
-    },
+    data: { username: "", password: "" },
     errors: {},
   };
 
-  //  A Basic Validation Implementation
-    validate = () => {
-        const errors={};
-        
-        if (this.state.account.username.trim() === '')
-            errors.username = 'UserName is required.';
+  schema = {
+    username: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
+  };
 
-    return { username: "Username is required." };
-    };
-    
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    const errors = this.validate();
-    this.setState({ errors });
-    if (errors) return;
+  doSubmit = () => {
     // Call the server
-
     console.log("Submitted");
   };
 
-  handleChange = ({ currentTarget: input }) => {
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account });
-  };
-
   render() {
-    const { account } = this.state;
     return (
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
-          <Input
-            name="username"
-            value={account.username}
-            label="Username"
-            onChange={this.handleChange}
-          />
-
-          <Input
-            name="password"
-            value={account.password}
-            label="Password"
-            onChange={this.handleChange}
-          />
-
-          <button className="btn btn-primary">Login</button>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password", "password")}
+          {this.renderButton("Login")}
         </form>
       </div>
     );
