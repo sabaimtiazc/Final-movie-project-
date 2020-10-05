@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -37,8 +38,8 @@ class Movies extends Component {
     try {
       await deleteMovie(movie._id);
     } catch (ex) {
-      if (ex.response && ex.response.status === 404) console.log("x");
-      toast.error("This movie has already been deleted.");
+      if (ex.response && ex.response.status === 404)
+        toast.error("This movie has already been deleted.");
 
       this.setState({ movies: originalMovies });
     }
@@ -96,7 +97,6 @@ class Movies extends Component {
   render() {
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
-
     const { user } = this.props;
 
     if (count === 0) return <p>There are no movies in the database.</p>;
